@@ -83,9 +83,49 @@ func ListTasks() {
 }
 
 func CompleteTask(id int) {
-	panic("unimplemented")
+	file, err := os.Open(dataFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
+		return 
+	}
+	defer file.Close()
+
+	var tasks []Task
+	if err := json.NewDecoder(file).Decode(&tasks); err != nil {
+		return
+	}
+
+	for i, task := range tasks {
+		if task.ID == id {
+			tasks[i].Done = true
+			break
+		}
+	}
+	saveTasks(tasks)
 }
 
 func DeleteTask(id int) {
-	panic("unimplemented")
+	file, err := os.Open(dataFile)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return
+		}
+		return 
+	}
+	defer file.Close()
+
+	var tasks []Task
+	if err := json.NewDecoder(file).Decode(&tasks); err != nil {
+		return
+	}
+
+	for i, task := range tasks {
+		if task.ID == id {
+			tasks = append(tasks[:i], tasks[i+1:]...)
+			break
+		}
+	}
+	saveTasks(tasks)
 }
