@@ -102,4 +102,5 @@ func DeleteTask(id int) {
 			break
 		}
 	}
+	saveTasks(tasks)
 }
